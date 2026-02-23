@@ -13,10 +13,11 @@
  */
 package com.accolite.pru.health.AuthApp.security;
 
-import com.accolite.pru.health.AuthApp.model.CustomUserDetails;
-import com.accolite.pru.health.AuthApp.model.Role;
-import com.accolite.pru.health.AuthApp.model.RoleName;
-import com.accolite.pru.health.AuthApp.model.User;
+import com.accolite.pru.health.authapp.model.CustomUserDetails;
+import com.accolite.pru.health.authapp.model.Role;
+import com.accolite.pru.health.authapp.model.RoleName;
+import com.accolite.pru.health.authapp.model.User;
+import com.accolite.pru.health.authapp.security.JwtTokenProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
