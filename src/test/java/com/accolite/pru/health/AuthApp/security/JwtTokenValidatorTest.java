@@ -13,9 +13,11 @@
  */
 package com.accolite.pru.health.AuthApp.security;
 
-import com.accolite.pru.health.AuthApp.cache.LoggedOutJwtTokenCache;
-import com.accolite.pru.health.AuthApp.event.OnUserLogoutSuccessEvent;
-import com.accolite.pru.health.AuthApp.exception.InvalidTokenRequestException;
+import com.accolite.pru.health.authapp.cache.LoggedOutJwtTokenCache;
+import com.accolite.pru.health.authapp.event.OnUserLogoutSuccessEvent;
+import com.accolite.pru.health.authapp.exception.InvalidTokenRequestException;
+import com.accolite.pru.health.authapp.security.JwtTokenProvider;
+import com.accolite.pru.health.authapp.security.JwtTokenValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -25,9 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class JwtTokenValidatorTest {
 

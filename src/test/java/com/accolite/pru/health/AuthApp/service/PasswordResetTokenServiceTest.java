@@ -1,11 +1,12 @@
 package com.accolite.pru.health.AuthApp.service;
 
-import com.accolite.pru.health.AuthApp.exception.InvalidTokenRequestException;
-import com.accolite.pru.health.AuthApp.exception.ResourceNotFoundException;
-import com.accolite.pru.health.AuthApp.model.PasswordResetToken;
-import com.accolite.pru.health.AuthApp.model.User;
-import com.accolite.pru.health.AuthApp.model.payload.PasswordResetRequest;
-import com.accolite.pru.health.AuthApp.repository.PasswordResetTokenRepository;
+import com.accolite.pru.health.authapp.exception.InvalidTokenRequestException;
+import com.accolite.pru.health.authapp.exception.ResourceNotFoundException;
+import com.accolite.pru.health.authapp.model.PasswordResetToken;
+import com.accolite.pru.health.authapp.model.User;
+import com.accolite.pru.health.authapp.model.payload.PasswordResetRequest;
+import com.accolite.pru.health.authapp.repository.PasswordResetTokenRepository;
+import com.accolite.pru.health.authapp.service.PasswordResetTokenService;
 import com.google.common.collect.ImmutableList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

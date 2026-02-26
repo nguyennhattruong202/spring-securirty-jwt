@@ -13,8 +13,9 @@
  */
 package com.accolite.pru.health.AuthApp.cache;
 
-import com.accolite.pru.health.AuthApp.event.OnUserLogoutSuccessEvent;
-import com.accolite.pru.health.AuthApp.security.JwtTokenProvider;
+import com.accolite.pru.health.authapp.cache.LoggedOutJwtTokenCache;
+import com.accolite.pru.health.authapp.event.OnUserLogoutSuccessEvent;
+import com.accolite.pru.health.authapp.security.JwtTokenProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
