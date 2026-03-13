@@ -13,11 +13,11 @@
  */
 package com.accolite.pru.health.AuthApp.security;
 
-import com.accolite.pru.health.authapp.model.CustomUserDetails;
-import com.accolite.pru.health.authapp.model.Role;
-import com.accolite.pru.health.authapp.model.RoleName;
-import com.accolite.pru.health.authapp.model.User;
-import com.accolite.pru.health.authapp.security.JwtTokenProvider;
+import com.truong.spring.security.jwt.model.CustomUserDetails;
+import com.truong.spring.security.jwt.model.Role;
+import com.truong.spring.security.jwt.model.RoleName;
+import com.truong.spring.security.jwt.model.User;
+import com.truong.spring.security.jwt.security.JwtTokenProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -65,7 +65,7 @@ public class JwtTokenProviderTest {
 
     private CustomUserDetails stubCustomUser() {
         User user = new User();
-        user.setId((long) 100);
+        user.setUserId((long) 100);
         user.setRoles(Collections.singleton(new Role(RoleName.ROLE_ADMIN)));
         return new CustomUserDetails(user);
     }

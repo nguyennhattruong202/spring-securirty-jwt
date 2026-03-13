@@ -1,0 +1,53 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/login_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
+    username: root
+    password: ${DB_PASSWORD}
+
+    # Connection pool HikariCP
+    hikari:
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-test-query: SELECT 1
+      pool-name: LoginHikariPool
+
+    # Legacy properties
+    testWhileIdle: true
+    validationQuery: SELECT 1
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: true
+    generate-ddl: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        # Cache
+        cache:
+          use_second_level_cache: false
+          use_query_cache: false
+        # Batch processing
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+    show-sql: true
+    open-in-view: false
+
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+      schema-locations: classpath:schema.sql
+
+  # Jackson properties
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+    time-zone: UTC

@@ -13,11 +13,11 @@
  */
 package com.accolite.pru.health.AuthApp.security;
 
-import com.accolite.pru.health.authapp.cache.LoggedOutJwtTokenCache;
-import com.accolite.pru.health.authapp.event.OnUserLogoutSuccessEvent;
-import com.accolite.pru.health.authapp.exception.InvalidTokenRequestException;
-import com.accolite.pru.health.authapp.security.JwtTokenProvider;
-import com.accolite.pru.health.authapp.security.JwtTokenValidator;
+import com.truong.spring.security.jwt.cache.LoggedOutJwtTokenCache;
+import com.truong.spring.security.jwt.event.OnUserLogoutSuccessEvent;
+import com.truong.spring.security.jwt.exception.InvalidTokenRequestException;
+import com.truong.spring.security.jwt.security.JwtTokenProvider;
+import com.truong.spring.security.jwt.security.JwtTokenValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

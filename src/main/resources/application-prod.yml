@@ -1,0 +1,8 @@
+# application-prod.yml
+spring:
+  config:
+    import:
+      - optional:classpath:config/server-config.yml
+      - optional:classpath:config/database-config.yml
+      - optional:classpath:config/jwt-config.yml
+      - optional:classpath:config/mail-config.yml

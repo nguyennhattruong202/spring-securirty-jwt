@@ -1,12 +1,12 @@
 package com.accolite.pru.health.AuthApp.service;
 
-import com.accolite.pru.health.authapp.exception.InvalidTokenRequestException;
-import com.accolite.pru.health.authapp.exception.ResourceNotFoundException;
-import com.accolite.pru.health.authapp.model.PasswordResetToken;
-import com.accolite.pru.health.authapp.model.User;
-import com.accolite.pru.health.authapp.model.payload.PasswordResetRequest;
-import com.accolite.pru.health.authapp.repository.PasswordResetTokenRepository;
-import com.accolite.pru.health.authapp.service.PasswordResetTokenService;
+import com.truong.spring.security.jwt.exception.InvalidTokenRequestException;
+import com.truong.spring.security.jwt.exception.ResourceNotFoundException;
+import com.truong.spring.security.jwt.model.PasswordResetToken;
+import com.truong.spring.security.jwt.model.User;
+import com.truong.spring.security.jwt.model.payload.PasswordResetRequest;
+import com.truong.spring.security.jwt.repository.PasswordResetTokenRepository;
+import com.truong.spring.security.jwt.service.PasswordResetTokenService;
 import com.google.common.collect.ImmutableList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
