@@ -1,0 +1,43 @@
+app:
+  jwt:
+    header:
+      name: Authorization
+      prefix: "Bearer "
+    secret: ${JWT_KEY}
+    expiration: 900000
+
+    #Config refresh token
+    refresh:
+      secret: ${JWT_KEY}
+      expiration: 604800000
+
+    # Claims default
+    claims:
+      issuer: login-app
+      audience: login-users
+
+  token:
+    email:
+      verification:
+        duration: 3600000
+        resend-delay: 60000
+        max-attempts: 3
+
+    password:
+      reset:
+        duration: 3600000
+
+    refresh:
+      duration: 2592000000
+
+  # Cache configuration
+  cache:
+    logoutToken:
+      maxSize: 1000
+      expireAfter: 86400000
+
+  # Email template configuration
+  velocity:
+    templates:
+      location: /templates/
+      cache: true

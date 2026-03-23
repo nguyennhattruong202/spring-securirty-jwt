@@ -1,0 +1,26 @@
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+
+  swagger-ui:
+    path: /swagger-ui
+    enabled: true
+    operationsSorter: method
+    tagsSorter: alpha
+    display-request-duration: true
+    disable-swagger-default-url: true
+
+  packages-to-scan:
+    - com.truong.spring.security.jwt.controller
+
+  paths-to-match:
+    - /api/**
+
+  # Cache
+  cache:
+    disabled: true
+
+  # Default produces/consumes
+  default-produces-media-type: application/json
+  default-consumes-media-type: application/json
