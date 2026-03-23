@@ -45,7 +45,6 @@ public class AuthService {
     private final UserDeviceService userDeviceService;
     private final PasswordResetTokenService passwordResetService;
 
-    @Autowired
     public AuthService(UserService userService, JwtTokenProvider tokenProvider, RefreshTokenService refreshTokenService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, EmailVerificationTokenService emailVerificationTokenService, UserDeviceService userDeviceService, PasswordResetTokenService passwordResetService) {
         this.userService = userService;
         this.tokenProvider = tokenProvider;
@@ -188,7 +187,7 @@ public class AuthService {
         String deviceId = loginRequest.getDeviceInfo().getDeviceId();
         userDeviceService.findDeviceByUserId(currentUser.getUserId(), deviceId)
                 .map(UserDevice::getRefreshToken)
-                .map(RefreshToken::getId)
+                .map(RefreshToken::getTokenId)
                 .ifPresent(refreshTokenService::deleteById);
 
         UserDevice userDevice = userDeviceService.createUserDevice(loginRequest.getDeviceInfo());

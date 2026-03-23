@@ -61,7 +61,7 @@ public class OnRegenerateEmailVerificationListener implements ApplicationListene
             mailService.sendEmailVerification(emailConfirmationUrl, recipientAddress);
         } catch (IOException | TemplateException | MessagingException e) {
             log.error(String.valueOf(e));
-            throw new MailSendException(recipientAddress, "Email Verification");
+            throw new MailSendException(recipientAddress, "Email Verification", e);
         }
     }
 

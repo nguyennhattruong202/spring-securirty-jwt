@@ -25,7 +25,8 @@ import org.hibernate.annotations.NaturalId;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name = "user")
+@Entity
+@Table(name = "user")
 public class User extends DateAudit {
 
     @Setter
@@ -106,11 +107,6 @@ public class User extends DateAudit {
 
     public void addRoles(Set<Role> roles) {
         roles.forEach(this::addRole);
-    }
-
-    public void removeRole(Role role) {
-        roles.remove(role);
-        role.getUserList().remove(this);
     }
 
     public void markVerificationConfirmed() {

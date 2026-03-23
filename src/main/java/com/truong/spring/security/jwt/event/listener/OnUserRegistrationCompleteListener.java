@@ -14,6 +14,7 @@
 package com.truong.spring.security.jwt.event.listener;
 
 import com.truong.spring.security.jwt.event.OnUserRegistrationCompleteEvent;
+import com.truong.spring.security.jwt.exception.MailSendException;
 import com.truong.spring.security.jwt.model.User;
 import com.truong.spring.security.jwt.service.EmailVerificationTokenService;
 import com.truong.spring.security.jwt.service.MailService;
@@ -21,7 +22,12 @@ import freemarker.template.TemplateException;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +39,8 @@ import java.io.IOException;
 public class OnUserRegistrationCompleteListener {
     private final EmailVerificationTokenService emailVerificationTokenService;
     private final MailService mailService;
+    @Value("${app.verification.url.validation.enabled:true}")
+    private boolean validateUrl;
 
     /**
      * As soon as a registration event is complete, invoke the email verification
@@ -41,19 +49,63 @@ public class OnUserRegistrationCompleteListener {
      */
     @Async("taskExecutor")
     @EventListener
-    private void sendEmailVerification(OnUserRegistrationCompleteEvent event) {
-        var data = event.getRegistrationEventData();
+    @Retryable(
+            retryFor = {MailSendException.class, MessagingException.class, IOException.class, TemplateException.class},
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 1000, multiplier = 2)
+    )
+    public void sendEmailVerification(OnUserRegistrationCompleteEvent event) {
+        final var data = event.getRegistrationEventData();
         log.info("Processing verification for eventId: {}", data.eventId());
+
+        if (data.isExpired()) {
+            log.warn("Event {} expired, skipping email", data.eventId());
+            return;
+        }
+
         try {
             User user = data.user();
             String token = emailVerificationTokenService.generateNewToken();
-            emailVerificationTokenService.createVerificationToken(user, token);
-            String recipientAddress = data.email();
+            if (token == null || token.isBlank()) {
+                log.error("Generated token is null or empty for user: {}", user.getUserId());
+                return;
+            }
+            try {
+                emailVerificationTokenService.createVerificationToken(user, token);
+            } catch (DataIntegrityViolationException e) {
+                log.error("Token already exists for user: {}", user.getUserId(), e);
+                return;
+            }
+
             String emailConfirmationUrl = data.getFullVerificationUrl(token);
+            if (validateUrl && !isValidUrl(emailConfirmationUrl)) {
+                log.error("Invalid confirmation URL for user: {}, URL: {}", user.getUserId(), emailConfirmationUrl);
+                return;
+            }
+
+            String recipientAddress = data.email();
             mailService.sendEmailVerification(emailConfirmationUrl, recipientAddress);
-            log.info("Verification email sent to {} for eventId: {}", recipientAddress, data.eventId());
+            log.info("Verification email sent successfully to {} for eventId: {}", recipientAddress, data.eventId());
         } catch (IOException | TemplateException | MessagingException e) {
             log.error("Failed to send verification email for eventId: {}", data.eventId(), e);
+            throw new MailSendException(data.email(), "Email Verification", e);
+        }
+    }
+
+    @Recover
+    public void recover(MailSendException e, OnUserRegistrationCompleteEvent event) {
+        var data = event.getRegistrationEventData();
+        log.error("Failed to send email after retries for eventId: {}, email: {}",
+                data.eventId(), data.email(), e);
+    }
+
+    private boolean isValidUrl(String url) {
+        if (url == null || url.isBlank()) return false;
+        try {
+            var validatedUrl = java.net.URI.create(url).toURL();
+            return true;
+        } catch (IllegalArgumentException | java.net.MalformedURLException e) {
+            return false;
         }
     }
 }

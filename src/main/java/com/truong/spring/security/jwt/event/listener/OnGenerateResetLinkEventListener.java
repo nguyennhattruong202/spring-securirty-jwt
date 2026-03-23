@@ -61,7 +61,7 @@ public class OnGenerateResetLinkEventListener implements ApplicationListener<OnG
             mailService.sendResetLink(emailConfirmationUrl, recipientAddress);
         } catch (IOException | TemplateException | MessagingException e) {
             log.error(String.valueOf(e));
-            throw new MailSendException(recipientAddress, "Email Verification");
+            throw new MailSendException(recipientAddress, "Email Verification", e);
         }
     }
 

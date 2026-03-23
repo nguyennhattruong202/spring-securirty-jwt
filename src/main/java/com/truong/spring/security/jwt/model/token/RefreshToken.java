@@ -15,94 +15,44 @@ package com.truong.spring.security.jwt.model.token;
 
 import com.truong.spring.security.jwt.model.UserDevice;
 import com.truong.spring.security.jwt.model.audit.DateAudit;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.SequenceGenerator;
 import java.time.Instant;
 
-@Entity(name = "REFRESH_TOKEN")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "refresh_token")
 public class RefreshToken extends DateAudit {
 
     @Id
-    @Column(name = "TOKEN_ID")
+    @Column(name = "token_id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "refresh_token_seq")
     @SequenceGenerator(name = "refresh_token_seq", allocationSize = 1)
-    private Long id;
+    private Long tokenId;
 
-    @Column(name = "TOKEN", nullable = false, unique = true)
+    @Column(name = "token", nullable = false, unique = true)
     @NaturalId(mutable = true)
     private String token;
 
     @OneToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "USER_DEVICE_ID", unique = true)
+    @JoinColumn(name = "user_device_id", unique = true)
     private UserDevice userDevice;
 
-    @Column(name = "REFRESH_COUNT")
+    @Column(name = "refresh_count")
     private Long refreshCount;
 
-    @Column(name = "EXPIRY_DT", nullable = false)
+    @Column(name = "expiry_date", nullable = false)
     private Instant expiryDate;
-
-    public RefreshToken() {
-    }
-
-    public RefreshToken(Long id, String token, UserDevice userDevice, Long refreshCount, Instant expiryDate) {
-        this.id = id;
-        this.token = token;
-        this.userDevice = userDevice;
-        this.refreshCount = refreshCount;
-        this.expiryDate = expiryDate;
-    }
 
     public void incrementRefreshCount() {
         refreshCount = refreshCount + 1;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public UserDevice getUserDevice() {
-        return userDevice;
-    }
-
-    public void setUserDevice(UserDevice userDevice) {
-        this.userDevice = userDevice;
-    }
-
-    public Instant getExpiryDate() {
-        return expiryDate;
-    }
-
-    public void setExpiryDate(Instant expiryDate) {
-        this.expiryDate = expiryDate;
-    }
-
-    public Long getRefreshCount() {
-        return refreshCount;
-    }
-
-    public void setRefreshCount(Long refreshCount) {
-        this.refreshCount = refreshCount;
     }
 }

@@ -22,10 +22,11 @@ import com.truong.spring.security.jwt.model.UserDevice;
 import com.truong.spring.security.jwt.model.payload.LogOutRequest;
 import com.truong.spring.security.jwt.model.payload.RegistrationRequest;
 import com.truong.spring.security.jwt.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -33,21 +34,14 @@ import java.util.Set;
 
 @Service
 @Slf4j
+@Transactional
+@RequiredArgsConstructor
 public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final RoleService roleService;
     private final UserDeviceService userDeviceService;
     private final RefreshTokenService refreshTokenService;
-
-    @Autowired
-    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, RoleService roleService, UserDeviceService userDeviceService, RefreshTokenService refreshTokenService) {
-        this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
-        this.roleService = roleService;
-        this.userDeviceService = userDeviceService;
-        this.refreshTokenService = refreshTokenService;
-    }
 
     /**
      * Finds a user in the database by username
@@ -66,8 +60,8 @@ public class UserService {
     /**
      * Find a user in db by id.
      */
-    public Optional<User> findById(Long Id) {
-        return userRepository.findById(Id);
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
     }
 
     /**
@@ -123,7 +117,7 @@ public class UserService {
 
     /**
      * Log the given user out and delete the refresh token associated with it. If no device
-     * id is found matching the database for this user, throw a log out exception.
+     * id is found matching the database for this user, throw a logout exception.
      */
     public void logoutUser(@CurrentUser CustomUserDetails currentUser, LogOutRequest logOutRequest) {
         String deviceId = logOutRequest.getDeviceInfo().getDeviceId();
@@ -131,7 +125,7 @@ public class UserService {
                 .filter(device -> device.getDeviceId().equals(deviceId))
                 .orElseThrow(() -> new UserLogoutException(logOutRequest.getDeviceInfo().getDeviceId(), "Invalid device Id supplied. No matching device found for the given user "));
 
-        log.info("Removing refresh token associated with device [" + userDevice + "]");
-        refreshTokenService.deleteById(userDevice.getRefreshToken().getId());
+      log.info("Removing refresh token associated with device [{}]", userDevice);
+        refreshTokenService.deleteById(userDevice.getRefreshToken().getTokenId());
     }
 }

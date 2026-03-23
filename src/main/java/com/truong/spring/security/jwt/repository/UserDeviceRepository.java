@@ -16,15 +16,14 @@ package com.truong.spring.security.jwt.repository;
 import com.truong.spring.security.jwt.model.UserDevice;
 import com.truong.spring.security.jwt.model.token.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 public interface UserDeviceRepository extends JpaRepository<UserDevice, Long> {
-
-    @Override
-    Optional<UserDevice> findById(Long id);
 
     Optional<UserDevice> findByRefreshToken(RefreshToken refreshToken);
 
-    Optional<UserDevice> findByUserIdAndDeviceId(Long userId, String userDeviceId);
+    Optional<UserDevice> findByUserUserIdAndDeviceId(Long userId, String deviceId);
 }

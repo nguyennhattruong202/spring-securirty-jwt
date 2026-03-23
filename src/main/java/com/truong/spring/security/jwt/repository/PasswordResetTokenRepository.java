@@ -27,6 +27,6 @@ public interface PasswordResetTokenRepository extends JpaRepository<PasswordRese
 
     Optional<PasswordResetToken> findByToken(String token);
 
-    @Query("SELECT t FROM PASSWORD_RESET_TOKEN t WHERE t.active = true and t.user = :user")
+    @Query("SELECT token FROM PasswordResetToken token WHERE token.active = true and token.user = :user")
     List<PasswordResetToken> findActiveTokensForUser(User user);
 }

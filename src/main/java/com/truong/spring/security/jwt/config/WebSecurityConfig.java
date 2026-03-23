@@ -16,11 +16,10 @@ package com.truong.spring.security.jwt.config;
 import com.truong.spring.security.jwt.security.JwtAuthenticationEntryPoint;
 import com.truong.spring.security.jwt.security.JwtAuthenticationFilter;
 import com.truong.spring.security.jwt.service.CustomUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -38,21 +37,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Profile("!dev")
 @Configuration
 @EnableWebSecurity(debug = true)
-@EnableJpaRepositories(basePackages = "com.accolite.pru.health.AuthApp.repository")
-@EnableMethodSecurity(
-        securedEnabled = true,
-        jsr250Enabled = true)
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+@RequiredArgsConstructor
 public class WebSecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
-
     private final JwtAuthenticationEntryPoint jwtEntryPoint;
-
-    @Autowired
-    public WebSecurityConfig(CustomUserDetailsService userDetailsService, JwtAuthenticationEntryPoint jwtEntryPoint) {
-        this.userDetailsService = userDetailsService;
-        this.jwtEntryPoint = jwtEntryPoint;
-    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {

@@ -16,7 +16,9 @@ package com.truong.spring.security.jwt.repository;
 import com.truong.spring.security.jwt.model.Role;
 import com.truong.spring.security.jwt.model.RoleName;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
   boolean existsByRoleName(RoleName roleName);
 }

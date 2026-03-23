@@ -59,7 +59,7 @@ public class OnUserAccountChangeListener implements ApplicationListener<OnUserAc
             mailService.sendAccountChangeEmail(action, actionStatus, recipientAddress);
         } catch (IOException | TemplateException | MessagingException e) {
             log.error(String.valueOf(e));
-            throw new MailSendException(recipientAddress, "Account Change Mail");
+            throw new MailSendException(recipientAddress, "Account Change Mail", e);
         }
     }
 }

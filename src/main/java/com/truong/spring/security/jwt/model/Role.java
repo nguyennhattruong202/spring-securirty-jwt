@@ -27,7 +27,8 @@ import java.util.Set;
  * The type Role. Defines the role and the list of users who are associated with that role
  */
 @NoArgsConstructor
-@Entity(name = "role")
+@Entity
+@Table(name = "role")
 @Getter
 @Setter
 public class Role {
@@ -35,7 +36,7 @@ public class Role {
     @Id
     @Column(name = "role_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long roleId;
 
     @Column(name = "role_name")
     @Enumerated(EnumType.STRING)

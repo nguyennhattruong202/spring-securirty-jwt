@@ -13,10 +13,12 @@
  */
 package com.truong.spring.security.jwt.exception;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.CONFLICT)
+@Getter
 public class ResourceAlreadyInUseException extends RuntimeException {
 
     private final String resourceName;
@@ -28,17 +30,5 @@ public class ResourceAlreadyInUseException extends RuntimeException {
         this.resourceName = resourceName;
         this.fieldName = fieldName;
         this.fieldValue = fieldValue;
-    }
-
-    public String getResourceName() {
-        return resourceName;
-    }
-
-    public String getFieldName() {
-        return fieldName;
-    }
-
-    public Object getFieldValue() {
-        return fieldValue;
     }
 }

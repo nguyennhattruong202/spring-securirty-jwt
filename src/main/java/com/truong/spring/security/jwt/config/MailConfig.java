@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -26,7 +25,6 @@ import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
 import java.util.Properties;
 
 @Configuration
-@PropertySource("classpath:mail.properties")
 @EnableAsync
 public class MailConfig {
 
@@ -49,20 +47,23 @@ public class MailConfig {
     private String mailProtocol;
 
     @Value("${spring.mail.debug}")
-    private String mailDebug;
+    private boolean mailDebug;
 
-    @Value("${spring.mail.smtp.auth}")
-    private String mailSmtpAuth;
+    @Value("${spring.mail.properties.mail.smtp.auth}")
+    private boolean mailSmtpAuth;
 
-    @Value("${spring.mail.smtp.starttls.enable}")
-    private String mailSmtpStartTls;
+    @Value("${spring.mail.properties.mail.smtp.starttls.enable}")
+    private boolean mailSmtpStartTls;
+
+    @Value("${app.velocity.templates.location:/templates/}")
+    private String templateLoaderPath;
 
 
     @Bean
     @Primary
     public FreeMarkerConfigurationFactoryBean getFreeMarkerConfiguration() {
         FreeMarkerConfigurationFactoryBean bean = new FreeMarkerConfigurationFactoryBean();
-        bean.setTemplateLoaderPath("/templates/");
+        bean.setTemplateLoaderPath(templateLoaderPath);
         return bean;
     }
 
@@ -76,10 +77,10 @@ public class MailConfig {
         mailSender.setPassword(mailPassword);
 
         Properties javaMailProperties = new Properties();
-        javaMailProperties.put("mail.smtp.starttls.enable", mailSmtpStartTls);
-        javaMailProperties.put("mail.smtp.auth", mailSmtpAuth);
+        javaMailProperties.put("mail.smtp.starttls.enable", String.valueOf(mailSmtpStartTls));
+        javaMailProperties.put("mail.smtp.auth", String.valueOf(mailSmtpAuth));
         javaMailProperties.put("mail.transport.protocol", mailProtocol);
-        javaMailProperties.put("mail.debug", mailDebug);
+        javaMailProperties.put("mail.debug", String.valueOf(mailDebug));
 
         mailSender.setJavaMailProperties(javaMailProperties);
         return mailSender;
