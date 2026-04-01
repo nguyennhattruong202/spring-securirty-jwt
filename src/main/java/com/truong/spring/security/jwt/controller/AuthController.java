@@ -29,8 +29,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
@@ -44,29 +44,23 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
-@Tag(name = "Authorization Rest API", description = "Defines endpoints that can be hit only when the user is not " +
-        "logged in. It's not secured by default.")
+@Tag(name = "Authorization Rest API",
+        description = "Defines endpoints that can be hit only when the user is not logged in. It's not secured by default.")
+@RequiredArgsConstructor
 @Slf4j
 public class AuthController {
     private final AuthService authService;
     private final JwtTokenProvider tokenProvider;
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    @Autowired
-    public AuthController(AuthService authService, JwtTokenProvider tokenProvider, ApplicationEventPublisher applicationEventPublisher) {
-        this.authService = authService;
-        this.tokenProvider = tokenProvider;
-        this.applicationEventPublisher = applicationEventPublisher;
-    }
-
     /**
      * Checks is a given email is in use or not.
      */
     @Operation(summary = "Checks if the given email is in use")
     @GetMapping("/checkEmailInUse")
-    public ResponseEntity checkEmailInUse(@Param(value = "Email id to check against") @RequestParam("email") String email) {
+    public ResponseEntity<ApiResponse> checkEmailInUse(@Parameter(description = "Email id to check against") @RequestParam(name = "email") String email) {
         Boolean emailExists = authService.emailAlreadyExists(email);
-        return ResponseEntity.ok(new ApiResponse(true, emailExists.toString()));
+      return ResponseEntity.ok(new ApiResponse(true, String.valueOf(emailExists)));
     }
 
     /**
@@ -74,10 +68,9 @@ public class AuthController {
      */
     @Operation(summary = "Checks if the given username is in use")
     @GetMapping("/checkUsernameInUse")
-    public ResponseEntity checkUsernameInUse(@Param(value = "Username to check against") @RequestParam(
-            "username") String username) {
+    public ResponseEntity<ApiResponse> checkUsernameInUse(@Parameter(description = "Username to check against") @RequestParam(name = "username") String username) {
         Boolean usernameExists = authService.usernameAlreadyExists(username);
-        return ResponseEntity.ok(new ApiResponse(true, usernameExists.toString()));
+      return ResponseEntity.ok(new ApiResponse(true, String.valueOf(usernameExists)));
     }
 
 
@@ -92,7 +85,7 @@ public class AuthController {
                 .orElseThrow(() -> new UserLoginException("Couldn't login user [" + loginRequest + "]"));
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-        log.info("Logged in User returned [API]: " + customUserDetails.getUsername());
+      log.info("Logged in User returned [API]: {}", customUserDetails.getUsername());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         return authService.createAndPersistRefreshTokenForDevice(authentication, loginRequest)
@@ -256,7 +249,7 @@ public class AuthController {
         return authService.refreshJwtToken(tokenRefreshRequest)
                 .map(updatedToken -> {
                     String refreshToken = tokenRefreshRequest.getRefreshToken();
-                    log.info("Created new Jwt Auth token: " + updatedToken);
+                  log.info("Created new Jwt Auth token: {}", updatedToken);
                     return ResponseEntity.ok(new JwtAuthenticationResponse(updatedToken, refreshToken, tokenProvider.getExpiryDuration()));
                 })
                 .orElseThrow(() -> new TokenRefreshException(tokenRefreshRequest.getRefreshToken(), "Unexpected error during token refresh. Please logout and login again."));

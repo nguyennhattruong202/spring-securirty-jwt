@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.accolite.pru.health.AuthApp.security;
+package com.truong.spring.security.jwt.security;
 
 import com.truong.spring.security.jwt.cache.LoggedOutJwtTokenCache;
 import com.truong.spring.security.jwt.event.OnUserLogoutSuccessEvent;

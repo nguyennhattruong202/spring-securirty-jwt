@@ -1,4 +1,4 @@
-package com.accolite.pru.health.AuthApp.service;
+package com.truong.spring.security.jwt.service;
 
 import com.truong.spring.security.jwt.exception.InvalidTokenRequestException;
 import com.truong.spring.security.jwt.exception.ResourceNotFoundException;
